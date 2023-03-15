@@ -23,7 +23,7 @@ export default function Map() {
 		disableDefaultUI: true,
 		clickableIcons: false
 	}), []);
-	const onLoad = useCallback(map => (mapRef.current = map), []);
+	const onLoad = useCallback((map: any) => (mapRef.current = map), []);
 	const houses = useMemo(() => generateHouses(office), [office]);
 
 	const fetchDirections = (house: LatLngLiteral) => {
