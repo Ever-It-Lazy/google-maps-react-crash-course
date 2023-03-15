@@ -14,15 +14,16 @@ type DirectionsResult = google.maps.DirectionsResult;
 type MapOptions = google.maps.MapOptions;
 
 export default function Map() {
-	const [office, setOffice] = useState<LatLngLiteral>();
 	const mapRef = useRef<GoogleMap>();
 	const center = useMemo<LatLngLiteral>(() => ({ lat: 43, lng: -80 }), []);
+	const [office, setOffice] = useState<LatLngLiteral>(center);
 	const options = useMemo<MapOptions>(() => ({
 		mapId: "7ed5982448867083",
 		disableDefaultUI: true,
 		clickableIcons: false
 	}), []);
 	const onLoad = useCallback(map => (mapRef.current = map), []);
+	const houses = useMemo(() => generateHouses(office), [office]);
 
 	return <div className="container">
 		<div className="controls">
@@ -46,6 +47,18 @@ export default function Map() {
 							position={office}
 							icon="https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png"
 						/>
+
+						<MarkerClusterer>
+							{clusterer =>
+								houses.map(house => (
+									<Marker
+										key={house.lat}
+										position={house}
+										clusterer={clusterer}
+									/>
+								))
+							}
+						</MarkerClusterer>
 
 						<Circle center={office} radius={15000} options={closeOptions} />
 						<Circle center={office} radius={30000} options={middleOptions} />
