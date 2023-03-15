@@ -51,6 +51,10 @@ export default function Map() {
 				setOffice(position);
 				mapRef.current?.panTo(position);
 			}} />
+			{!office && <p>Enter the address of your office.</p>} {/* this will never get run */}
+			{directions && (
+				<Distance leg={directions.routes[0].legs[0]} />
+			)}
 		</div>
 		<div className="map">
 			<GoogleMap
