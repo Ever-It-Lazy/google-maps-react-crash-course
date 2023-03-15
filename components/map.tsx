@@ -14,6 +14,7 @@ type DirectionsResult = google.maps.DirectionsResult;
 type MapOptions = google.maps.MapOptions;
 
 export default function Map() {
+	const [directions, setDirections] = useState<DirectionsResult>();
 	const mapRef = useRef<GoogleMap>();
 	const center = useMemo<LatLngLiteral>(() => ({ lat: 43, lng: -80 }), []);
 	const [office, setOffice] = useState<LatLngLiteral>(center);
@@ -24,6 +25,24 @@ export default function Map() {
 	}), []);
 	const onLoad = useCallback(map => (mapRef.current = map), []);
 	const houses = useMemo(() => generateHouses(office), [office]);
+
+	const fetchDirections = (house: LatLngLiteral) => {
+		if (!office) return;
+
+		const service = new google.maps.DirectionsService();
+		service.route(
+			{
+				origin: house,
+				destination: office,
+				travelMode: google.maps.TravelMode.DRIVING
+			},
+			(result, status) => {
+				if (status === "OK" && result) {
+					setDirections(result);
+				}
+			}
+		)
+	};
 
 	return <div className="container">
 		<div className="controls">
@@ -41,6 +60,19 @@ export default function Map() {
 				options={options}
 				onLoad={onLoad}
 			>
+				{directions && (
+					<DirectionsRenderer
+						directions={directions}
+						options={{
+							polylineOptions: {
+								zIndex: 50,
+								strokeColor: "green",
+								strokeWeight: 5
+							}
+						}}
+					/>
+				)}
+
 				{office && (
 					<>
 						<Marker
@@ -55,6 +87,9 @@ export default function Map() {
 										key={house.lat}
 										position={house}
 										clusterer={clusterer}
+										onClick={() => {
+											fetchDirections(house);
+										}}
 									/>
 								))
 							}
