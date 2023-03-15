@@ -40,7 +40,18 @@ export default function Map() {
 				options={options}
 				onLoad={onLoad}
 			>
-				{office && <Marker position={office} icon="https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png" />}
+				{office && (
+					<>
+						<Marker
+							position={office}
+							icon="https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png"
+						/>
+
+						<Circle center={office} radius={15000} options={closeOptions} />
+						<Circle center={office} radius={30000} options={middleOptions} />
+						<Circle center={office} radius={45000} options={farOptions} />
+					</>
+				)}
 			</GoogleMap>
 		</div>
 	</div>;
