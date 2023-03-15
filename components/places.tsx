@@ -24,9 +24,16 @@ export default function Places({ setOffice }: PlacesProps) {
 		clearSuggestions
 	} = usePlacesAutocomplete();
 
-	console.log({ status, data });
+	const handleSelect = async (val: string) => {
+		setValue(val, false);
+		clearSuggestions();
 
-	return <Combobox onSelect={() => {}}>
+		const results = await getGeocode({ address: val });
+		const { lat, lng } = await getLatLng(results[0]);
+		setOffice({ lat, lng });
+	};
+
+	return <Combobox onSelect={handleSelect}>
 		<ComboboxInput
 			value={value}
 			onChange={e => setValue(e.target.value)}
