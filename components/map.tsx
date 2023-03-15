@@ -86,7 +86,7 @@ export default function Map() {
 
 						<MarkerClusterer>
 							{clusterer =>
-								houses.map(house => (
+								houses?.map(house => (
 									<Marker
 										key={house.lat}
 										position={house}
