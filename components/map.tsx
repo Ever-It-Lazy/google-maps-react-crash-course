@@ -84,20 +84,22 @@ export default function Map() {
 							icon="https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png"
 						/>
 
-						<MarkerClusterer>
-							{clusterer =>
-								houses?.map(house => (
-									<Marker
-										key={house.lat}
-										position={house}
-										clusterer={clusterer}
-										onClick={() => {
-											fetchDirections(house);
-										}}
-									/>
-								))
-							}
-						</MarkerClusterer>
+						{houses.length > 0 &&
+							<MarkerClusterer>
+								{clusterer =>
+									houses.map(house => (
+										<Marker
+											key={house.lat}
+											position={house}
+											clusterer={clusterer}
+											onClick={() => {
+												fetchDirections(house);
+											}}
+										/>
+									))
+								}
+							</MarkerClusterer>
+						}
 
 						<Circle center={office} radius={15000} options={closeOptions} />
 						<Circle center={office} radius={30000} options={middleOptions} />
